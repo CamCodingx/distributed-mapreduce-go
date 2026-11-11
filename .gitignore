@@ -1,0 +1,21 @@
+# Binaries and executables
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+dgrep
+dgrepcount
+
+# Test artifacts and intermediate MapReduce files
+mrtmp.*
+824-mrinput-*.txt
+diff.out
+diff2.out
+*.test
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
