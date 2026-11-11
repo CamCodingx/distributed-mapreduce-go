@@ -19,3 +19,6 @@ diff2.out
 Thumbs.db
 .vscode/
 .idea/
+
+# Local study materials (kept offline)
+INTERVIEW_STUDY_GUIDE.md

@@ -161,9 +161,9 @@ The test suite (`src/mapreduce/test_test.go`) validates:
 
 ---
 
-## Technical Interview Discussion Points
+## Design Decisions & Architectural Trade-offs
 
-When discussing this project in software engineering interviews, key topics to highlight:
-- **Why UNIX domain sockets for RPC?** High throughput and low latency on local simulated clusters without port collision or TCP overhead.
-- **Handling Worker Failures:** The master uses Go channels to decouple task generation from worker allocation. A worker is never returned to `registerChannel` if its RPC call fails, preventing poison-pill workers from repeatedly failing tasks.
-- **Concurrency Control:** How `sync.WaitGroup` coordinates phase transitions—the Reduce phase strictly waits for all Map tasks to finish to prevent reading incomplete intermediate partition files.
+- **Communication Mechanism (UNIX Domain Sockets):** Employs UNIX domain sockets for RPC rather than raw TCP to maximize throughput, minimize latency, and eliminate port-collision issues during local distributed simulations.
+- **Fault-Tolerant Worker Lifecycle:** Uses decoupled Go channels (`registerChannel`) for worker pooling. A worker node is only re-queued upon verified RPC success; failed worker connections are automatically dropped to prevent recurring task stalls.
+- **Phase Barrier Synchronization:** Employs `sync.WaitGroup` to establish a strict barrier between the Map and Reduce phases, ensuring reduce tasks never attempt to access partially partitioned intermediate files.
+- **Deterministic Partitioning:** Uses 32-bit FNV-1a hashing on keys modulo `nReduce` to ensure uniform distribution of key-value pairs across reduce partitions while maintaining deterministic routing.
